@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Switch } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Switch, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 const GoteoApp = () => {
   const [cantidad, setCantidad] = useState('');
@@ -21,9 +21,9 @@ const GoteoApp = () => {
       const goteoMacrogotas = (volumenSuero * 20) / tiempoEnMinutos;
       const goteoMlHora = goteoMicrogotas;
 
-      let resultadoText = `Microgotas por minuto: ${goteoMicrogotas.toFixed(2)} μgtt/min (${Math.ceil(goteoMicrogotas)}).`;
-      resultadoText += `\nMacrogotas por minuto: ${goteoMacrogotas.toFixed(2)} gtt/min (${Math.ceil(goteoMacrogotas)}).`;
-      resultadoText += `\nEl goteo en mililitros por hora es de ${goteoMlHora.toFixed(2)} ml/h (${Math.ceil(goteoMlHora)} ml/h).`;
+      let resultadoText = `Microgotas por minuto: ${goteoMicrogotas.toFixed(2)} μgtt/min (${Math.ceil(goteoMicrogotas)}).\n`;
+      resultadoText += `Macrogotas por minuto: ${goteoMacrogotas.toFixed(2)} gtt/min (${Math.ceil(goteoMacrogotas)}).\n`;
+      resultadoText += `El goteo en mililitros por hora es de ${goteoMlHora.toFixed(2)} ml/h (${Math.ceil(goteoMlHora)} ml/h).`;
 
       setResultado(resultadoText);
     } else {
@@ -31,37 +31,58 @@ const GoteoApp = () => {
     }
   };
 
-   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Calculadora de Goteo</Text>
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Cantidad (ml)</Text>
-        <TextInput
-          style={styles.input}
-          value={cantidad}
-          onChangeText={setCantidad}
-          keyboardType="numeric"
-        />
+  const limpiarCampos = () => {
+    setCantidad('');
+    setTiempo('');
+    setUnidadTiempo('minutos');
+    setResultado('');
+  };
+
+/**
+ ????
+ */
+
+
+
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Calculadora de Goteo</Text>
+
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Cantidad (ml)</Text>
+          <TextInput
+            style={styles.input}
+            value={cantidad}
+            onChangeText={setCantidad}
+            keyboardType="numeric"
+          />
+        </View>
+
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Tiempo</Text>
+          <View style={styles.timeContainer}>
+            <Text style={styles.switchText}>{unidadTiempo}</Text>
+            <Switch
+              value={unidadTiempo === 'minutos'}
+              onValueChange={(value) => setUnidadTiempo(value ? 'minutos' : 'horas')}
+            />
+          </View>
+          <TextInput
+            style={styles.input}
+            value={tiempo}
+            onChangeText={setTiempo}
+            keyboardType="numeric"
+          />
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={calcularGoteo}>
+          <Text style={styles.buttonText}>Calcular Goteo</Text>
+        </TouchableOpacity>
+    
+        {resultado !== '' && <Text style={styles.resultado}>{resultado}</Text>}
       </View>
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Tiempo</Text>
-        <TextInput
-          style={styles.input}
-          value={tiempo}
-          onChangeText={setTiempo}
-          keyboardType="numeric"
-        />
-        <Switch
-          value={unidadTiempo === 'minutos'}
-          onValueChange={(value) => setUnidadTiempo(value ? 'minutos' : 'horas')}
-        />
-        <Text style={styles.switchText}>{unidadTiempo}</Text>
-      </View>
-      <TouchableOpacity style={styles.button} onPress={calcularGoteo}>
-        <Text style={styles.buttonText}>Calcular Goteo</Text>
-      </TouchableOpacity>
-      {resultado !== '' && <Text style={styles.resultado}>{resultado}</Text>}
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -70,38 +91,36 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#222222',
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#007bff',
     marginBottom: 20,
   },
   formGroup: {
-    color: 'white',
     marginBottom: 16,
   },
   label: {
     marginBottom: 8,
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'white',
-  },
-  inputContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    color: '#333333',
   },
   input: {
     width: 200,
     height: 40,
-    borderColor: 'white',
+    borderColor: 'blue',
     borderWidth: 1,
     paddingHorizontal: 8,
     backgroundColor: 'white',
+    borderRadius: 4,
+    color: 'black',
   },
   switchText: {
-    color: 'white',
+    color: '#333333',
     fontSize: 16,
     marginLeft: 10,
   },
@@ -117,10 +136,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   resultado: {
-    color: 'white',
+    color: '#333333',
     fontSize: 16,
     marginTop: 20,
     textAlign: 'center',
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between', // Para ajustar el espacio entre el texto y el Switch
   },
 });
 
