@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Switch, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, ActivityIndicator, Text, Image, TextInput, TouchableOpacity, StyleSheet, Switch, TouchableWithoutFeedback, Keyboard } from 'react-native';
+
+
+
+const App = () => (
+  <View style={[styles.container, styles.horizontal]}>
+  
+    <ActivityIndicator size="large" />
+  
+  </View>
+);
+
+
+
 
 const GoteoApp = () => {
   const [cantidad, setCantidad] = useState('');
@@ -38,15 +51,11 @@ const GoteoApp = () => {
     setResultado('');
   };
 
-/**
- ????
- */
-
-
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
+      <Image source={require('./img/suero.png')} style={styles.logo} />
+
         <Text style={styles.title}>Calculadora de Goteo</Text>
 
         <View style={styles.formGroup}>
@@ -79,7 +88,7 @@ const GoteoApp = () => {
         <TouchableOpacity style={styles.button} onPress={calcularGoteo}>
           <Text style={styles.buttonText}>Calcular Goteo</Text>
         </TouchableOpacity>
-    
+
         {resultado !== '' && <Text style={styles.resultado}>{resultado}</Text>}
       </View>
     </TouchableWithoutFeedback>
@@ -91,60 +100,68 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#9999',
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#007bff',
-    marginBottom: 20,
+    color: '#007AFF',
+    marginBottom: 30,
   },
   formGroup: {
     marginBottom: 16,
   },
   label: {
     marginBottom: 8,
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#333333',
   },
+  logo: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
   input: {
-    width: 200,
+    width: 220,
     height: 40,
-    borderColor: 'blue',
+    borderColor: '#007AFF',
     borderWidth: 1,
     paddingHorizontal: 8,
     backgroundColor: 'white',
     borderRadius: 4,
     color: 'black',
+    fontSize: 18,
   },
   switchText: {
     color: '#333333',
-    fontSize: 16,
+    fontSize: 18,
     marginLeft: 10,
   },
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#007AFF',
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderRadius: 8,
-    marginTop: 20,
+    marginTop: 30,
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   resultado: {
     color: '#333333',
-    fontSize: 16,
-    marginTop: 20,
+    fontSize: 18,
+    marginTop: 30,
     textAlign: 'center',
   },
   timeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between', // Para ajustar el espacio entre el texto y el Switch
+    marginBottom: 8,
   },
 });
 
