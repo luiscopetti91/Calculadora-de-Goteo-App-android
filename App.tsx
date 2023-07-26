@@ -1,24 +1,19 @@
-import React, { useState } from 'react';
-import { View, ActivityIndicator, Text, Image, TextInput, TouchableOpacity, StyleSheet, Switch, TouchableWithoutFeedback, Keyboard } from 'react-native';
-
-
-
-const App = () => (
-  <View style={[styles.container, styles.horizontal]}>
-  
-    <ActivityIndicator size="large" />
-  
-  </View>
-);
-
-
-
+import React, { useState, useEffect } from 'react';
+import { View, ActivityIndicator, Image, Text, TextInput, TouchableOpacity, StyleSheet, Switch, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 const GoteoApp = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [cantidad, setCantidad] = useState('');
   const [tiempo, setTiempo] = useState('');
   const [unidadTiempo, setUnidadTiempo] = useState('minutos');
   const [resultado, setResultado] = useState('');
+
+  useEffect(() => {
+    // Simulando una carga de 3 segundos (ajusta el tiempo según tus necesidades)
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+  }, []);
 
   const calcularGoteo = () => {
     const volumenSuero = parseInt(cantidad);
@@ -44,6 +39,8 @@ const GoteoApp = () => {
     }
   };
 
+
+
   const limpiarCampos = () => {
     setCantidad('');
     setTiempo('');
@@ -52,47 +49,62 @@ const GoteoApp = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-      <Image source={require('./img/suero.png')} style={styles.logo} />
+    
+    
 
-        <Text style={styles.title}>Calculadora de Goteo</Text>
 
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Cantidad (ml)</Text>
-          <TextInput
-            style={styles.input}
-            value={cantidad}
-            onChangeText={setCantidad}
-            keyboardType="numeric"
-          />
-        </View>
+    <View style={styles.container}>
+    {isLoading ? (
+        <>
+          <ActivityIndicator size="large" color="#007AFF" />
+          <Text style={styles.loadingText}>Cargando...</Text>
+          <Text style={styles.loadingfooter}>App desarrollada por Luis Copetti</Text>
+        </>
+      ) : (
+       
+       <>
+          <Image source={require('./assets/suero.png')} style={styles.logo} />
+          <Text style={styles.title}>Calculadora de Goteo</Text>
 
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Tiempo</Text>
-          <View style={styles.timeContainer}>
-            <Text style={styles.switchText}>{unidadTiempo}</Text>
-            <Switch
-              value={unidadTiempo === 'minutos'}
-              onValueChange={(value) => setUnidadTiempo(value ? 'minutos' : 'horas')}
+          {/* Resto del contenido de la aplicación */}
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Cantidad (ml)</Text>
+            <TextInput
+              style={styles.input}
+              value={cantidad}
+              onChangeText={setCantidad}
+              keyboardType="numeric"
             />
           </View>
-          <TextInput
-            style={styles.input}
-            value={tiempo}
-            onChangeText={setTiempo}
-            keyboardType="numeric"
-          />
-        </View>
 
-        <TouchableOpacity style={styles.button} onPress={calcularGoteo}>
-          <Text style={styles.buttonText}>Calcular Goteo</Text>
-        </TouchableOpacity>
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Tiempo</Text>
+            <View style={styles.timeContainer}>
+              <Text style={styles.switchText}>{unidadTiempo}</Text>
+              <Switch
+                value={unidadTiempo === 'minutos'}
+                onValueChange={(value) => setUnidadTiempo(value ? 'minutos' : 'horas')}
+              />
+            </View>
+            <TextInput
+              style={styles.input}
+              value={tiempo}
+              onChangeText={setTiempo}
+              keyboardType="numeric"
+            />
+          </View>
 
-        {resultado !== '' && <Text style={styles.resultado}>{resultado}</Text>}
-      </View>
-    </TouchableWithoutFeedback>
+          <TouchableOpacity style={styles.button} onPress={calcularGoteo}>
+            <Text style={styles.buttonText}>Calcular Goteo</Text>
+          </TouchableOpacity>
+
+          {resultado !== '' && <Text style={styles.resultado}>{resultado}</Text>}
+        </>
+      )}
+    </View>
+    
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -162,6 +174,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between', // Para ajustar el espacio entre el texto y el Switch
     marginBottom: 8,
+  },
+  loadingText: {
+    marginTop: 10, // o cualquier valor que desees
+    fontSize: 18, // o cualquier valor que desees
+    color: '#007AFF', // o cualquier valor que desees
+},
+  loadingfooter: {
+    textAlign: 'center',
+    position: 'absolute', 
+    bottom: 0,
+    marginTop: 10, // o cualquier valor que desees
+    fontSize: 18, // o cualquier valor que desees
+    color: 'black', // o cualquier valor que desees
   },
 });
 
